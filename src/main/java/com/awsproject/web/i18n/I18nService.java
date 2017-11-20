@@ -1,5 +1,6 @@
 package com.awsproject.web.i18n;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -12,6 +13,7 @@ import java.util.Locale;
  */
 
 @Service
+@Slf4j
 public class I18nService {
 
     @Autowired
@@ -22,6 +24,7 @@ public class I18nService {
      * @param messageId The key to the message resource file
      */
     public String getMessage(String messageId) {
+        LOGGER.info("Returning i18n text for messageID {}", messageId);
         Locale locale = LocaleContextHolder.getLocale();
         return getMessage(messageId, locale);
     }
