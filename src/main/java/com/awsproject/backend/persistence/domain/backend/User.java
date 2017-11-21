@@ -1,6 +1,8 @@
 package com.awsproject.backend.persistence.domain.backend;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
@@ -12,7 +14,9 @@ import java.util.Set;
  * Created by singeev on 21/11/2017.
  */
 @Entity
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
 public class User implements Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -31,6 +35,9 @@ public class User implements Serializable {
 
     @Column(name = "last_name")
     private String lastName;
+
+    @Column(name = "phone_number")
+    private String phoneNumber;
 
     @Length(max = 500)
     private String description;
@@ -51,4 +58,17 @@ public class User implements Serializable {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<UserRole> userRoles = new HashSet<>();
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof User)) return false;
+        User user = (User) o;
+        return id == user.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return (int) (id ^ (id >>> 32));
+    }
 }
