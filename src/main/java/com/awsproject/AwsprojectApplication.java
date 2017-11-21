@@ -1,14 +1,39 @@
 package com.awsproject;
 
+import com.awsproject.backend.persistence.domain.backend.Role;
+import com.awsproject.backend.persistence.domain.backend.User;
+import com.awsproject.backend.persistence.domain.backend.UserRole;
+import com.awsproject.backend.service.UserService;
+import com.awsproject.enums.PlansEnum;
+import com.awsproject.enums.RolesEnum;
+import com.awsproject.utils.UsersUtils;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @SpringBootApplication
-@EnableJpaRepositories(basePackages = "com.awsproject.backend.persistence.repositories")
-public class AwsprojectApplication {
+@Slf4j
+public class AwsprojectApplication implements CommandLineRunner{
+
+	@Autowired
+	private UserService userService;
 
 	public static void main(String[] args) {
 		SpringApplication.run(AwsprojectApplication.class, args);
+	}
+
+	@Override
+	public void run(String... strings) throws Exception {
+		User user = UsersUtils.createBasicUser();
+		Set<UserRole> userRoles = new HashSet<>();
+		userRoles.add(new UserRole(user, new Role(RolesEnum.BASIC)));
+		LOGGER.debug("Creating user with username {}", user.getUsername());
+		userService.crateUser(user, PlansEnum.PRO, userRoles);
+		LOGGER.debug("User {} created", user.getUsername());
 	}
 }
