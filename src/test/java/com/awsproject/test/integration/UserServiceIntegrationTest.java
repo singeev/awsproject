@@ -7,7 +7,9 @@ import com.awsproject.backend.service.UserService;
 import com.awsproject.enums.PlansEnum;
 import com.awsproject.enums.RolesEnum;
 import com.awsproject.utils.UserUtils;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TestName;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -28,10 +30,16 @@ public class UserServiceIntegrationTest {
     @Autowired
     private UserService userService;
 
+    @Rule
+    public TestName testName = new TestName();
+
     @Test
     public void createNewUserTest() {
+        String userName = testName.getMethodName();
+        String email = userName + "@gmail.com";
+
         Set<UserRole> userRoles = new HashSet<>();
-        User basicUser = UserUtils.createBasicUser();
+        User basicUser = UserUtils.createBasicUser(userName, email);
         userRoles.add(new UserRole(basicUser, new Role(RolesEnum.BASIC)));
 
         User user = userService.crateUser(basicUser, PlansEnum.BASIC, userRoles);

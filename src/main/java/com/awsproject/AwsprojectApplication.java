@@ -29,7 +29,11 @@ public class AwsprojectApplication implements CommandLineRunner{
 
 	@Override
 	public void run(String... strings) throws Exception {
-		User user = UserUtils.createBasicUser();
+
+		String userName = "Hulk";
+		String email = "green@gmail.com";
+
+		User user = UserUtils.createBasicUser(userName, email);
 		Set<UserRole> userRoles = new HashSet<>();
 		userRoles.add(new UserRole(user, new Role(RolesEnum.BASIC)));
 		LOGGER.debug("Creating user with username {}", user.getUsername());
