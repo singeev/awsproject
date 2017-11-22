@@ -1,49 +1,48 @@
 package com.awsproject.test.integration;
 
-import com.awsproject.backend.persistence.domain.backend.Role;
 import com.awsproject.backend.persistence.domain.backend.User;
-import com.awsproject.backend.persistence.domain.backend.UserRole;
-import com.awsproject.backend.service.UserService;
-import com.awsproject.enums.PlansEnum;
-import com.awsproject.enums.RolesEnum;
-import com.awsproject.utils.UserUtils;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestName;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.UUID;
 
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by singeev on 21/11/2017.
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class UserServiceIntegrationTest {
+public class UserServiceIntegrationTest extends AbstractServiceIntegrationTest {
 
     @Autowired
-    private UserService userService;
+    private BCryptPasswordEncoder passwordEncoder;
 
     @Rule
     public TestName testName = new TestName();
 
     @Test
     public void createNewUserTest() {
-        String userName = testName.getMethodName();
-        String email = userName + "@gmail.com";
-
-        Set<UserRole> userRoles = new HashSet<>();
-        User basicUser = UserUtils.createBasicUser(userName, email);
-        userRoles.add(new UserRole(basicUser, new Role(RolesEnum.BASIC)));
-
-        User user = userService.crateUser(basicUser, PlansEnum.BASIC, userRoles);
+        User user = createUser(testName);
         assertNotNull(user);
         assertNotNull(user.getId());
+    }
+
+    @Test
+    public void shouldUpdateUserPasswordTest() {
+        User user = createUser(testName);
+        assertNotNull(user);
+        assertNotNull(user.getId());
+        String newPassword = UUID.randomUUID().toString();
+        userService.updateUserPassword(user.getId(), newPassword);
+        user = userRepository.findOne(user.getId());
+        assertTrue(passwordEncoder.matches(newPassword, user.getPassword()));
     }
 }

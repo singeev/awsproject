@@ -15,6 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Set;
+import java.util.UUID;
 
 import static org.junit.Assert.*;
 
@@ -74,5 +75,24 @@ public class UserIntegrationTests extends AbstractIntegrationTest {
         assertTrue(userId != 0);
         userRepository.delete(userId);
         assertFalse(userRepository.exists(userId));
+    }
+
+    @Test
+    public void shouldRetrieveUserByEmail() {
+        User user = createUser(testName);
+        User retrievedUser = userRepository.findByEmail(user.getEmail());
+        assertNotNull(retrievedUser);
+        assertNotNull(retrievedUser.getId());
+    }
+
+    @Test
+    public void shouldUpdateUserPassword() {
+        User user = createUser(testName);
+        assertNotNull(user);
+        assertNotNull(user.getId());
+        String newPassword = UUID.randomUUID().toString();
+        userRepository.updateUserPassword(user.getId(), newPassword);
+        user = userRepository.findOne(user.getId());
+        assertEquals(newPassword, user.getPassword());
     }
 }
