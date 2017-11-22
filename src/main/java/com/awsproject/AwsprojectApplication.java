@@ -6,7 +6,7 @@ import com.awsproject.backend.persistence.domain.backend.UserRole;
 import com.awsproject.backend.service.UserService;
 import com.awsproject.enums.PlansEnum;
 import com.awsproject.enums.RolesEnum;
-import com.awsproject.utils.UsersUtils;
+import com.awsproject.utils.UserUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -29,7 +29,7 @@ public class AwsprojectApplication implements CommandLineRunner{
 
 	@Override
 	public void run(String... strings) throws Exception {
-		User user = UsersUtils.createBasicUser();
+		User user = UserUtils.createBasicUser();
 		Set<UserRole> userRoles = new HashSet<>();
 		userRoles.add(new UserRole(user, new Role(RolesEnum.BASIC)));
 		LOGGER.debug("Creating user with username {}", user.getUsername());

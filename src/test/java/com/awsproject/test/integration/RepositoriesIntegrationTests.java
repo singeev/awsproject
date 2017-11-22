@@ -9,6 +9,7 @@ import com.awsproject.backend.persistence.repositories.RoleRepository;
 import com.awsproject.backend.persistence.repositories.UserRepository;
 import com.awsproject.enums.PlansEnum;
 import com.awsproject.enums.RolesEnum;
+import com.awsproject.utils.UserUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -64,23 +65,7 @@ public class RepositoriesIntegrationTests {
 
     @Test
     public void shouldCreateNewUser() {
-        Plan plan = new Plan(PlansEnum.BASIC);
-        planRepository.save(plan);
-
-        User user = createBasicUser();
-        user.setPlan(plan);
-
-        Role role = new Role(RolesEnum.BASIC);
-        Set<UserRole> userRoles = new HashSet<>();
-        UserRole userRole = new UserRole(user, role);
-        userRoles.add(userRole);
-        user.getUserRoles().addAll(userRoles);
-
-        for(UserRole r : userRoles) {
-            roleRepository.save(r.getRole());
-        }
-
-        user = userRepository.save(user);
+        User user = createAndSaveBasicUser();
         User retrievedUser = userRepository.findOne(user.getId());
         assertNotNull(retrievedUser);
         assertTrue(retrievedUser.getId() != 0);
@@ -93,18 +78,30 @@ public class RepositoriesIntegrationTests {
         });
     }
 
-    private User createBasicUser() {
-        User user = new User();
-        user.setUsername("Hulk");
-        user.setPassword("hsdfoiew");
-        user.setEmail("hulk@gmail.com");
-        user.setFirstName("Big");
-        user.setLastName("Green");
-        user.setPhoneNumber("9871098234");
-        user.setCountry("USA");
-        user.setEnabled(true);
-        user.setDescription("A test user");
-        user.setProfileImageUrl("https://sldkf.image.com/hulk");
+    @Test
+    public void shouldDeleteUser() {
+        long userId = createAndSaveBasicUser().getId();
+        assertTrue(userId != 0);
+        userRepository.delete(userId);
+        assertFalse(userRepository.exists(userId));
+    }
+
+    private User createAndSaveBasicUser() {
+        Plan plan = new Plan(PlansEnum.BASIC);
+        planRepository.save(plan);
+
+        User user = UserUtils.createBasicUser();
+        user.setPlan(plan);
+
+        Role role = new Role(RolesEnum.BASIC);
+        roleRepository.save(role);
+
+        Set<UserRole> userRoles = new HashSet<>();
+        UserRole userRole = new UserRole(user, role);
+        userRoles.add(userRole);
+
+        user.getUserRoles().addAll(userRoles);
+        user = userRepository.save(user);
         return user;
     }
 }

@@ -5,9 +5,9 @@ import com.awsproject.backend.persistence.domain.backend.User;
 /**
  * Created by singeev on 21/11/2017.
  */
-public class UsersUtils {
+public class UserUtils {
 
-    private UsersUtils() {
+    private UserUtils() {
         throw new AssertionError("Non instantiable");
     }
 

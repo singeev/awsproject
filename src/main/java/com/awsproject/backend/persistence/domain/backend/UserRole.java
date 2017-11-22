@@ -1,6 +1,5 @@
 package com.awsproject.backend.persistence.domain.backend;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -16,33 +15,38 @@ import java.io.Serializable;
 @Setter
 @Getter
 @NoArgsConstructor
-@AllArgsConstructor
 public class UserRole implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @ManyToOne(fetch = FetchType.LAZY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private long id;
+
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Id
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "role_id")
     private Role role;
+
+    public UserRole(User user, Role role) {
+        this.user = user;
+        this.role = role;
+    }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof UserRole)) return false;
+
         UserRole userRole = (UserRole) o;
-        if (user != null ? !user.equals(userRole.user) : userRole.user != null) return false;
-        return role != null ? role.equals(userRole.role) : userRole.role == null;
+
+        return id == userRole.id;
     }
 
     @Override
     public int hashCode() {
-        int result = user != null ? user.hashCode() : 0;
-        result = 31 * result + (role != null ? role.hashCode() : 0);
-        return result;
+        return (int) (id ^ (id >>> 32));
     }
 }
