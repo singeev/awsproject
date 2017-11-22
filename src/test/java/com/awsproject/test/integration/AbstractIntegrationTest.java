@@ -10,8 +10,8 @@ import com.awsproject.backend.persistence.repositories.UserRepository;
 import com.awsproject.enums.PlansEnum;
 import com.awsproject.enums.RolesEnum;
 import com.awsproject.utils.UserUtils;
+import org.junit.rules.TestName;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -19,19 +19,18 @@ import java.util.Set;
 /**
  * Created by singeev on 22/11/2017.
  */
-@Component
-public class TestHelper {
+public abstract class AbstractIntegrationTest {
 
     @Autowired
-    private PlanRepository planRepository;
+    protected PlanRepository planRepository;
 
     @Autowired
-    private RoleRepository roleRepository;
+    protected RoleRepository roleRepository;
 
     @Autowired
-    private UserRepository userRepository;
+    protected UserRepository userRepository;
 
-    public User createAndSaveBasicUser(String userName, String email) {
+    protected User createAndSaveBasicUser(String userName, String email) {
         Plan plan = new Plan(PlansEnum.BASIC);
         planRepository.save(plan);
 
@@ -48,5 +47,9 @@ public class TestHelper {
         user.getUserRoles().addAll(userRoles);
         user = userRepository.save(user);
         return user;
+    }
+
+    protected User createUser(TestName testName) {
+        return createAndSaveBasicUser(testName.getMethodName(), testName.getMethodName() + "@gmail.com");
     }
 }

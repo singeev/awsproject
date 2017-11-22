@@ -20,13 +20,10 @@ import static org.junit.Assert.*;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class UserSecurityServiceIntegrationTests {
+public class UserSecurityServiceIntegrationTests extends AbstractIntegrationTest {
 
     @Autowired
     private UserSecurityService userSecurityService;
-
-    @Autowired
-    private TestHelper testHelper;
 
     @Rule
     public TestName testName = new TestName();
@@ -38,11 +35,9 @@ public class UserSecurityServiceIntegrationTests {
 
     @Test
     public void shouldCreateUserAndRetrieveThemByUserName() {
-        String userName = testName.getMethodName();
-        String email = userName + "@gmail.com";
-        User user = testHelper.createAndSaveBasicUser(userName, email);
+        User user = createUser(testName);
         assertTrue(user.getId() != 0);
-        UserDetails retrievedUser = userSecurityService.loadUserByUsername(userName);
+        UserDetails retrievedUser = userSecurityService.loadUserByUsername(testName.getMethodName());
         assertEquals(user, retrievedUser);
     }
 

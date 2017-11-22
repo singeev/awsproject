@@ -4,9 +4,6 @@ import com.awsproject.backend.persistence.domain.backend.Plan;
 import com.awsproject.backend.persistence.domain.backend.Role;
 import com.awsproject.backend.persistence.domain.backend.User;
 import com.awsproject.backend.persistence.domain.backend.UserRole;
-import com.awsproject.backend.persistence.repositories.PlanRepository;
-import com.awsproject.backend.persistence.repositories.RoleRepository;
-import com.awsproject.backend.persistence.repositories.UserRepository;
 import com.awsproject.enums.PlansEnum;
 import com.awsproject.enums.RolesEnum;
 import org.junit.Before;
@@ -14,7 +11,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestName;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -27,19 +23,7 @@ import static org.junit.Assert.*;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class RepositoriesIntegrationTests {
-
-    @Autowired
-    private PlanRepository planRepository;
-
-    @Autowired
-    private RoleRepository roleRepository;
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private TestHelper testHelper;
+public class UserIntegrationTests extends AbstractIntegrationTest {
 
     @Rule
     public TestName testName = new TestName();
@@ -71,10 +55,7 @@ public class RepositoriesIntegrationTests {
 
     @Test
     public void shouldCreateNewUser() {
-        String userName = testName.getMethodName();
-        String email = userName + "@gmail.com";
-
-        User user = testHelper.createAndSaveBasicUser(userName, email);
+        User user = createUser(testName);
         User retrievedUser = userRepository.findOne(user.getId());
         assertNotNull(retrievedUser);
         assertTrue(retrievedUser.getId() != 0);
@@ -89,10 +70,7 @@ public class RepositoriesIntegrationTests {
 
     @Test
     public void shouldDeleteUser() {
-        String userName = testName.getMethodName();
-        String email = userName + "@gmail.com";
-
-        long userId = testHelper.createAndSaveBasicUser(userName, email).getId();
+        long userId = createUser(testName).getId();
         assertTrue(userId != 0);
         userRepository.delete(userId);
         assertFalse(userRepository.exists(userId));
