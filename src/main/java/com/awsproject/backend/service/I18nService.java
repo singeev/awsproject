@@ -1,4 +1,4 @@
-package com.awsproject.web.i18n;
+package com.awsproject.backend.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +34,7 @@ public class I18nService {
      * @param messageId The key to the message resource file
      * @param locale The locale
      */
-    private String getMessage(String messageId, Locale locale) {
+    public String getMessage(String messageId, Locale locale) {
         return messageSource.getMessage(messageId, null, locale);
     }
 }

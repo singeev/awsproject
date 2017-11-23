@@ -1,6 +1,9 @@
 package com.awsproject.utils;
 
 import com.awsproject.backend.persistence.domain.backend.User;
+import com.awsproject.web.controllers.ForgotMyPasswordController;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * Created by singeev on 21/11/2017.
@@ -30,5 +33,11 @@ public class UserUtils {
         user.setDescription("A test user");
         user.setProfileImageUrl("https://sldkf.image.com/hulk");
         return user;
+    }
+
+    public static String createPasswordResetUrl(HttpServletRequest request, long userId, String token) {
+        return request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() +
+                request.getContextPath() + ForgotMyPasswordController.CHANGE_PASSWORD_URL_PATH +
+                "?id=" + userId + "&token=" + token;
     }
 }
