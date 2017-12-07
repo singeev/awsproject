@@ -2,6 +2,7 @@ package com.awsproject.config;
 
 import com.awsproject.backend.service.UserSecurityService;
 import com.awsproject.web.controllers.ForgotMyPasswordController;
+import com.awsproject.web.controllers.SignupController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -49,7 +50,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/error/**/*",
             "/console/**",
             ForgotMyPasswordController.FORGOT_PASSWORD_URL_MAPPING,
-            ForgotMyPasswordController.CHANGE_PASSWORD_URL_PATH
+            ForgotMyPasswordController.CHANGE_PASSWORD_URL_PATH,
+            SignupController.SIGNUP_URL_MAPPING
     };
 
     @Override

@@ -1,8 +1,6 @@
 package com.awsproject.backend.persistence.domain.backend;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,9 +16,10 @@ import java.util.stream.Collectors;
  * Created by singeev on 21/11/2017.
  */
 @Entity
-@Getter
-@Setter
+@Builder
+@Data
 @NoArgsConstructor
+@AllArgsConstructor
 public class User implements Serializable, UserDetails {
     private static final long serialVersionUID = 1L;
 
@@ -90,6 +89,11 @@ public class User implements Serializable, UserDetails {
                 .map(Authority::new)
                 .distinct()
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public String toString() {
+        return "User: " + username;
     }
 
     @Override
