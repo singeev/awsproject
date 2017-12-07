@@ -44,15 +44,15 @@ public class UserUtils {
     }
 
     public static <T extends BasicAccountPayload> User fromWebUserToDomainUser(T webUser) {
-        return User.builder()
-                .firstName(webUser.getFirstName())
-                .lastName(webUser.getLastName())
-                .password(webUser.getPassword())
-                .username(webUser.getUsername())
-                .email(webUser.getEmail())
-                .phoneNumber(webUser.getPhoneNumber())
-                .description(webUser.getDescription())
-                .country(webUser.getCountry())
-                .build();
+        User user = new User();
+        user.setPassword(webUser.getPassword());
+        user.setUsername(webUser.getUsername());
+        user.setFirstName(webUser.getFirstName());
+        user.setLastName(webUser.getLastName());
+        user.setEmail(webUser.getEmail());
+        user.setCountry(webUser.getCountry());
+        user.setDescription(webUser.getDescription());
+        user.setPhoneNumber(webUser.getPhoneNumber());
+        return user;
     }
 }

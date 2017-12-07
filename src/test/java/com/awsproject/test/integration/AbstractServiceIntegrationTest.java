@@ -33,6 +33,6 @@ public class AbstractServiceIntegrationTest {
         User basicUser = UserUtils.createBasicUser(userName, email);
         userRoles.add(new UserRole(basicUser, new Role(RolesEnum.BASIC)));
 
-        return userService.crateUser(basicUser, PlansEnum.BASIC, userRoles);
+        return userService.createUser(basicUser, PlansEnum.BASIC, userRoles);
     }
 }

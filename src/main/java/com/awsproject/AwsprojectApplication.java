@@ -3,6 +3,7 @@ package com.awsproject;
 import com.awsproject.backend.persistence.domain.backend.Role;
 import com.awsproject.backend.persistence.domain.backend.User;
 import com.awsproject.backend.persistence.domain.backend.UserRole;
+import com.awsproject.backend.service.PlanService;
 import com.awsproject.backend.service.UserService;
 import com.awsproject.enums.PlansEnum;
 import com.awsproject.enums.RolesEnum;
@@ -24,6 +25,9 @@ public class AwsprojectApplication implements CommandLineRunner{
 	@Autowired
 	private UserService userService;
 
+	@Autowired
+	private PlanService planService;
+
 	@Value("${webmaster.username}")
 	private String webmasterUserName;
 
@@ -40,12 +44,16 @@ public class AwsprojectApplication implements CommandLineRunner{
 	@Override
 	public void run(String... strings) throws Exception {
 
+		LOGGER.info("Creating Basic and Pro plans in a DB");
+		planService.createPlan(PlansEnum.BASIC.getId());
+		planService.createPlan(PlansEnum.PRO.getId());
+
 		User user = UserUtils.createBasicUser(webmasterUserName, webmasterEmail);
 		user.setPassword(webmasterPassword);
 		Set<UserRole> userRoles = new HashSet<>();
 		userRoles.add(new UserRole(user, new Role(RolesEnum.ADMIN)));
 		LOGGER.debug("Creating user with username {}", user.getUsername());
-		userService.crateUser(user, PlansEnum.PRO, userRoles);
+		userService.createUser(user, PlansEnum.PRO, userRoles);
 		LOGGER.debug("User {} created", user.getUsername());
 	}
 }
