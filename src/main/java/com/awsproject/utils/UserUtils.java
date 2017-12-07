@@ -2,6 +2,7 @@ package com.awsproject.utils;
 
 import com.awsproject.backend.persistence.domain.backend.User;
 import com.awsproject.web.controllers.ForgotMyPasswordController;
+import com.awsproject.web.domain.frontend.BasicAccountPayload;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -16,8 +17,9 @@ public class UserUtils {
 
     /**
      * Creates a user basic attributes set.
+     *
      * @param userName The userName
-     * @param email The email
+     * @param email    The email
      * @return A User entity
      */
     public static User createBasicUser(String userName, String email) {
@@ -39,5 +41,18 @@ public class UserUtils {
         return request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() +
                 request.getContextPath() + ForgotMyPasswordController.CHANGE_PASSWORD_URL_PATH +
                 "?id=" + userId + "&token=" + token;
+    }
+
+    public static <T extends BasicAccountPayload> User fromWebUserToDomainUser(T webUser) {
+        User user = new User();
+        user.setPassword(webUser.getPassword());
+        user.setUsername(webUser.getUsername());
+        user.setFirstName(webUser.getFirstName());
+        user.setLastName(webUser.getLastName());
+        user.setEmail(webUser.getEmail());
+        user.setCountry(webUser.getCountry());
+        user.setDescription(webUser.getDescription());
+        user.setPhoneNumber(webUser.getPhoneNumber());
+        return user;
     }
 }
